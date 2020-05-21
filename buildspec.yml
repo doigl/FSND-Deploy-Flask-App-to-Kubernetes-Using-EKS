@@ -13,20 +13,12 @@ phases:
       - chmod +x ./kubectl ./aws-iam-authenticator
       - export PATH=$PWD/:$PATH
       - apt-get update && apt-get -y install jq python3-pip python3-dev && pip3 install --upgrade awscli
-      - wget https://www.python.org/ftp/python/3.7.4/Python-3.7.4.tgz
-      - sudo tar xzf Python-3.7.4.tgz
-      - cd Python-3.7.4
-      - sudo ./configure --enable-optimizations
-      - sudo make altinstall
-pre_build:
+  pre_build:
       commands:
         - TAG="$REPOSITORY_NAME.$REPOSITORY_BRANCH.$ENVIRONMENT_NAME.$(date +%Y-%m-%d.%H.%M.%S).$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
         - sed -i 's@CONTAINER_IMAGE@'"$REPOSITORY_URI:$TAG"'@' simple_jwt_api.yml
         - $(aws ecr get-login --no-include-email)
         - export KUBECONFIG=$HOME/.kube/config
-        - pip3.7 install --upgrade pip
-        - pip3.7 install -r requirements.txt
-        - pytest test_main.py
   build:
     commands:
       - docker build --tag $REPOSITORY_URI:$TAG .
