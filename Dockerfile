@@ -2,6 +2,7 @@ FROM python:3.7.7-slim-stretch
 RUN mkdir /app
 COPY main.py /app
 COPY requirements.txt /app
+COPY test_main.py /app
 WORKDIR /app
 
 RUN apt-get update -y && apt-get upgrade -y
