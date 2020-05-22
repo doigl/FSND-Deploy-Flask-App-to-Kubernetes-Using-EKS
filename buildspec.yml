@@ -13,7 +13,7 @@ phases:
       - chmod +x ./kubectl ./aws-iam-authenticator
       - export PATH=$PWD/:$PATH
       - sudo add-apt-repository ppa:deadsnakes/ppa
-      - apt-get update && apt-get -y install jq python3.7 python3.7-venv python-pip
+      - apt-get update && apt-get -y install jq python3.7 python3.7-venv python-pip python-pip3
 
   pre_build:
       commands:
@@ -22,7 +22,7 @@ phases:
         - $(aws ecr get-login --no-include-email)
         - export KUBECONFIG=$HOME/.kube/config
         - pip install --upgrade pip
-        - pip install --upgrade awscli
+        - pip3 install --upgrade awscli
         - pip install -r requirements.txt
         - pytest test_main.py
   build:
