@@ -21,7 +21,7 @@ phases:
         - sed -i 's@CONTAINER_IMAGE@'"$REPOSITORY_URI:$TAG"'@' simple_jwt_api.yml
         - $(aws ecr get-login --no-include-email)
         - export KUBECONFIG=$HOME/.kube/config
-        - python3.7 -venv .
+        - python3.7 -m venv .
         - source ./bin/activate
         - pip install --upgrade pip
         - pip install -r requirements.txt
