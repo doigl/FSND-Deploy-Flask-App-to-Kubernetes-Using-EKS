@@ -13,7 +13,7 @@ phases:
       - chmod +x ./kubectl ./aws-iam-authenticator
       - export PATH=$PWD/:$PATH
       - sudo add-apt-repository ppa:deadsnakes/ppa
-      - apt-get update && apt-get -y install jq python3.7 python3.7-venv python-pip && pip install --upgrade awscli
+      - apt-get update && apt-get -y install jq python3.7 python3.7-venv python-pip
 
   pre_build:
       commands:
@@ -22,6 +22,7 @@ phases:
         - $(aws ecr get-login --no-include-email)
         - export KUBECONFIG=$HOME/.kube/config
         - pip install --upgrade pip
+        - pip install --upgrade awscli
         - pip install -r requirements.txt
         - pytest test_main.py
   build:
@@ -36,7 +37,7 @@ phases:
       - export AWS_SECRET_ACCESS_KEY="$(echo ${CREDENTIALS} | jq -r '.Credentials.SecretAccessKey')"
       - export AWS_SESSION_TOKEN="$(echo ${CREDENTIALS} | jq -r '.Credentials.SessionToken')"
       - export AWS_EXPIRATION=$(echo ${CREDENTIALS} | jq -r '.Credentials.Expiration')
-      - aws eks update-kubeconfig --name $EKS_CLUSTER_NAME
+      - aws eks update-kubeconfig --verbose --name $EKS_CLUSTER_NAME
       - kubectl apply -f simple_jwt_api.yml
       - printf '[{"name":"simple_jwt_api","imageUri":"%s"}]' $REPOSITORY_URI:$TAG > build.json
       - pwd
